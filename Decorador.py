@@ -14,6 +14,7 @@ class BaseJamon(Pizza):
     
     def get_precio(self):
         return self.pizza.precio
+
 #@Class Abstract
 class AbstractDecorator(Pizza):
     def __init__(self, pizza):
@@ -23,24 +24,16 @@ class AbstractDecorator(Pizza):
     def get_precio(self):
         pass
 
-class Chorizo(AbstractDecorator):
-    def __init__(self, pizza):
-        pizza.precio = pizza.get_precio() + 2
+class Component(AbstractDecorator):
+    def __init__(self, pizza, name):
+        precio_comp = {'Chorizo': 2, 'Peperoni': 4, 'Xqueso':5, 'Jalapeno': 6, 'Pina': 1}
+        
+        pizza.precio = pizza.get_precio() + precio_comp[name]
         self.pizza = pizza
         AbstractDecorator.__init__(self, self.pizza)
 
     def get_precio(self):
         return self.pizza.precio
-
-class Jalapeno(AbstractDecorator):
-    def __init__(self, pizza):
-        pizza.precio = pizza.get_precio() + 4
-        self.pizza = pizza
-        AbstractDecorator.__init__(self, self.pizza)
-
-    def get_precio(self):
-        return self.pizza.precio
-
 
 class TopicApp():
     def __init__(self):
@@ -53,23 +46,22 @@ class TopicApp():
         self.pizza = Pizza(0)
         self.pizza = BaseJamon(self.pizza)
         
-        self.btn_chorizo = Button(self.window, text="Chorizo", command = lambda : self.add_chorizo())
-        self.btn_chorizo.grid(column=0, row=0)
+        btn_chorizo = Button(self.window, text='Chorizo', 
+            command = lambda : self.add_Compont('Chorizo')).grid(column=0, row=0)
 
-        self.btn_jalapeno = Button(self.window, text="Jalapeno", command = lambda : self.add_jalapeno())
-        self.btn_jalapeno.grid(column=0, row=1)
+        btn_jalapeno = Button(self.window, text='Jalapeno', 
+            command = lambda : self.add_Compont('Jalapeno')).grid(column=0, row=1)
 
-        self.btn_Xqueso = Button(self.window, text="Xqueso")
-        self.btn_Xqueso.grid(column=0, row=2)
+        btn_Xqueso = Button(self.window, text='Xqueso',
+            command = lambda : self.add_Compont('Xqueso')).grid(column=0, row=2)
 
-        self.btn_peperoni = Button(self.window, text="Peperoni")
-        self.btn_peperoni.grid(column=0, row=3)
+        btn_peperoni = Button(self.window, text='Peperoni',
+            command = lambda : self.add_Compont('Peperoni')).grid(column=0, row=3)
 
-        self.btn_pina = Button(self.window, text="Piña")
-        self.btn_pina.grid(column=0, row=4)
+        btn_pina = Button(self.window, text='Pina',
+            command = lambda : self.add_Compont('Pina')).grid(column=0, row=4)
 
         self.btn_crear = Button(self.window, text="Crear", command = lambda : self.create_Pizza())
-        self.btn_chorizo.grid(column=0, row=0)
         self.btn_crear.grid(column=1, row=1)
 
         self.lb_precio = Label(self.window, text="Precio")
@@ -77,17 +69,12 @@ class TopicApp():
 
         self.lb_result = Label(self.window, text=self.pizza.get_precio())
         self.lb_result.grid(column=2, row=2)  
-        
+
         self.window.mainloop()
 
-    def add_chorizo(self):
-        self.pizza = Chorizo(self.pizza)
-        print("Chorizo agregado..   precio:{}\n".format(self.pizza.get_precio()))
-
-    def add_jalapeno(self):
-        self.pizza = Jalapeno(self.pizza)
-        print("jalapeno agregado..   precio:{}\n".format(self.pizza.get_precio()))
-    
+    def add_Compont(self, name):
+        self.pizza = Component(self.pizza, name)
+        print("{} agregado..   precio:{}\n".format(name, self.pizza.get_precio()))
 
     def create_Pizza(self):
         self.lb_result.configure(text=str(self.pizza.get_precio()))
