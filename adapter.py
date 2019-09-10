@@ -1,5 +1,5 @@
 import tkinter as tk
-
+from tkinter import messagebox
 class Vector():
     def __init__(self, vector: list):
         self.vectorData = vector
@@ -15,10 +15,10 @@ class AbstractAdapter():
         self.filas = fil
         self.col = col
 
-    def getElement(self, posx, posy):
+    def getElement(self, posf, posc):
         pass
 
-    def setElement(self, posx, posy, value):
+    def setElement(self, posf, posc, value):
         pass
 
 class Adapter(AbstractAdapter):
@@ -28,21 +28,20 @@ class Adapter(AbstractAdapter):
         AbstractAdapter.__init__(self, fil, col)
         self.matrix = vector
 
-    def getElement(self, posx, posy):
-        return self.matrix[posy*self.fil + posx]
+    def getElement(self, posf, posc):
+        return self.matrix[(posf-1)*self.col + (posc-1)]
 
-    def setElement(self, posx, posy, value):
-        self.matrix[posy*self.fil + posx] = value
+    def setElement(self, posf, posc, value):
+        self.matrix[(posf-1)*self.col + (posc-1)] = value
 
 
 class TopicApp():
     def __init__(self):
 
         #Datos del adaptador
-        vector = [1,2,3,5,6,7,9,10,11]
-        fil, col = 3 , 4
-        self.adapter = Adapter(fil,col,vector)
-        print(self.adapter.getElement(0,1))
+        vector = [1,2,3,4,5,6,7,8,9,10,11,12]
+        self.m, self.n = 3 , 4
+        self.adapter = Adapter(self.m, self.n,vector)
 
         self.mainWindow = tk.Tk()
         self.mainWindow.title("Welcome App Descount")
@@ -67,10 +66,17 @@ class TopicApp():
         self.mainWindow.mainloop()
 
     def get_Matrix(self):
-        x = int(self.inp_x.get())
-        y = int(self.inp_y.get())
+        fil = int(self.inp_x.get())
+        col = int(self.inp_y.get())
+
+        #Mensajes de error en caso de superar el rango de la matrix
+        if(fil < 1 or fil > self.m):
+            messagebox.showerror('Error', 'index row incorrect') 
         
-        result = self.adapter.getElement(y-1, x-1)
+        if(col < 1 or col > self.n):
+            messagebox.showerror('Error', 'index column incorrect') 
+        
+        result = self.adapter.getElement(fil, col)
         self.lbl_Result.configure(text=str(result))
         
 if __name__ == '__main__':
