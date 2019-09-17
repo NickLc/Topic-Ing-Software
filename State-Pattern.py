@@ -4,7 +4,6 @@ import tkinter as tk
 class DoorState:
     def __init__(self):
         self.name = 'Abstrac State'
-    
     def open(self):
         pass
     def close(self):
@@ -13,12 +12,12 @@ class DoorState:
         pass
     def disarm(self):
         pass
+    def repair(self):
+        pass
 
 class Open(DoorState):
-
     def __init__(self):
         self.name = 'Open State'
-
     def open(self):
         return Open()
     def close(self):
@@ -27,12 +26,12 @@ class Open(DoorState):
         return Open()
     def disarm(self):
         return Open()
+    def repair(self):
+        return Open()
 
 class Close(DoorState):
-    
     def __init__(self):
-        self.name = 'Close State'
-        
+        self.name = 'Close State'     
     def open(self):
         return Open()
     def close(self):
@@ -41,12 +40,12 @@ class Close(DoorState):
         return Arm()
     def disarm(self):
         return Close()
-
+    def repair(self):
+        return Close()
+    
 class Arm(DoorState):
-
     def __init__(self):
         self.name = 'Arm State'
-        
     def open(self):
         return Emergency()  
     def close(self):
@@ -55,7 +54,9 @@ class Arm(DoorState):
         return Arm()
     def disarm(self):
         return Close()
-
+    def repair(self):
+        return Arm()
+    
 class Emergency(DoorState):
     def __init__(self):
         self.name = 'Emergency State'
@@ -67,11 +68,12 @@ class Emergency(DoorState):
         return Emergency()
     def disarm(self):
         return Emergency()
+    def repair(self):
+        return Close()
 
 class Door:
     def __init__(self, state):
         self.state = state
-    
     def open(self):
         self.state = self.state.open()
     def close(self):
@@ -80,7 +82,9 @@ class Door:
         self.state = self.state.arm()
     def disarm(self):
         self.state = self.state.disarm()
-    
+    def repair(self):
+        self.state = self.state.repair()
+
 class TopicApp():
     def __init__(self):
         
@@ -112,6 +116,10 @@ class TopicApp():
                     command = lambda : self.disarm())
         self.btn_Disarm.grid(column=1, row=5)
         
+        self.btn_Repair = tk.Button(self.mainWindow, text='Repair', 
+                    command = lambda : self.repair())
+        self.btn_Repair.grid(column=1, row=6)
+
         self.mainWindow.mainloop()
 
     def open(self):
@@ -130,6 +138,9 @@ class TopicApp():
         self.door.disarm()
         self.lbl_showState.configure(text=self.door.state.name)
 
-
+    def repair(self):
+        self.door.repair()
+        self.lbl_showState.configure(text=self.door.state.name)
+        
 if __name__ == '__main__':
     Apx = TopicApp()
