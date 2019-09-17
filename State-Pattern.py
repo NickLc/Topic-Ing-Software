@@ -14,6 +14,10 @@ class DoorState:
         pass
     def repair(self):
         pass
+    def test(self):
+        pass
+    def endTest(self):
+        pass
 
 class Open(DoorState):
     def __init__(self):
@@ -27,6 +31,10 @@ class Open(DoorState):
     def disarm(self):
         return Open()
     def repair(self):
+        return Open()
+    def test(self):
+        return Open()
+    def endTest(self):
         return Open()
 
 class Close(DoorState):
@@ -42,7 +50,11 @@ class Close(DoorState):
         return Close()
     def repair(self):
         return Close()
-    
+    def test(self):
+        return Test()
+    def endTest(self):
+        return Close()
+
 class Arm(DoorState):
     def __init__(self):
         self.name = 'Arm State'
@@ -56,7 +68,11 @@ class Arm(DoorState):
         return Close()
     def repair(self):
         return Arm()
-    
+    def  test(self):
+        return Arm()
+    def endTest(self):
+        return Arm()
+        
 class Emergency(DoorState):
     def __init__(self):
         self.name = 'Emergency State'
@@ -69,6 +85,28 @@ class Emergency(DoorState):
     def disarm(self):
         return Emergency()
     def repair(self):
+        return Close()
+    def  test(self):
+        return Emergency()
+    def endTest(self):
+        return Emergency()
+        
+class Test(DoorState):
+    def __init__(self):
+        self.name = 'Test State'
+    def open(self):
+        return Test()
+    def close(self):
+        return Test()
+    def arm(self):
+        return Test()
+    def disarm(self):
+        return Test()
+    def repair(self):
+        return Test()
+    def test(self):
+        return Test()
+    def endTest(self):
         return Close()
 
 class Door:
@@ -84,6 +122,10 @@ class Door:
         self.state = self.state.disarm()
     def repair(self):
         self.state = self.state.repair()
+    def test(self):
+        self.state = self.state.test()
+    def endTest(self):
+        self.state = self.state.endTest()
 
 class TopicApp():
     def __init__(self):
@@ -120,6 +162,14 @@ class TopicApp():
                     command = lambda : self.repair())
         self.btn_Repair.grid(column=1, row=6)
 
+        self.btn_Test = tk.Button(self.mainWindow, text='Test', 
+                    command = lambda : self.test())
+        self.btn_Test.grid(column=2, row=2)
+
+        self.btn_EndTest = tk.Button(self.mainWindow, text='EndTest', 
+                    command = lambda : self.endTest())
+        self.btn_EndTest.grid(column=2, row=3)
+
         self.mainWindow.mainloop()
 
     def open(self):
@@ -141,6 +191,14 @@ class TopicApp():
     def repair(self):
         self.door.repair()
         self.lbl_showState.configure(text=self.door.state.name)
-        
+    
+    def test(self):
+        self.door.test()
+        self.lbl_showState.configure(text=self.door.state.name)
+    
+    def endTest(self):
+        self.door.endTest()
+        self.lbl_showState.configure(text=self.door.state.name)
+    
 if __name__ == '__main__':
     Apx = TopicApp()
