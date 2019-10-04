@@ -1,6 +1,24 @@
 import tkinter as tk
 from tkinter import scrolledtext
 import re
+#@Class Abstract
+class AbstractFilter:
+    def to_Filter(self):
+        pass
+
+class FilterSpace(AbstractFilter):
+
+    def to_Filter(self, cad):
+        """ Filter all space and tab from text input """
+        cad_output = re.sub(r'[\t ]+'," ", cad, re.M)
+        return cad_output
+class FilterWord(AbstractFilter):
+
+    def to_Filter(self, cad):
+        lst = re.findall(r'[\w]+', cad, re.M)
+        cad_output = "\n".join(lst)
+        return cad_output
+
 
 class TopicApp:
     def __init__(self):
@@ -27,36 +45,33 @@ class TopicApp:
         self.scroll_output.grid(column=0,row=5, sticky='W',padx=10)
   
         ## ----------B U T T O N --------------------
-        buton_filter_space = tk.Button(self.window, text='filter_space', command = self.filter_Space)
-        buton_filter_space.grid(column=2, row=3, sticky='W',padx=10)
+        buton_filSpace = tk.Button(self.window, text='filSpace', command = self.filSpace)
+        buton_filSpace.grid(column=2, row=3, sticky='W',padx=10)
 
-        buton_filter_word = tk.Button(self.window, text='filter_word', command = self.filter_Word)
-        buton_filter_word.grid(column=2, row=4, sticky='W',padx=10)
+        buton_filWord = tk.Button(self.window, text='filWord', command = self.filWord)
+        buton_filWord.grid(column=2, row=4, sticky='W',padx=10)
         
         self.window.mainloop()
     
-    def get_input(self):
+    def getInput(self):
 
         self.scroll_output.delete(0.0, tk.END)
         cad = self.scroll_input.get("0.0", tk.END)
         return cad
 
-    def set_output(self, cad):
+    def setOutput(self, cad):
         self.scroll_output.insert(tk.INSERT, cad)
 
-    def filter_Space(self):
+    def filSpace(self):
         """ Filter all space and tab from text input """
-        self.regex = re.compile(r'[\t ]+', re.M)
-        cad_output = self.regex.sub(" ", self.get_input())
-        self.set_output(cad_output)
+
+        cad = FilterSpace().to_Filter(self.getInput())
+        self.setOutput(cad)
     
-    def filter_Word(self):
+    def filWord(self):
         """Filter all word from text input"""
-        self.regex = re.compile(r'[\w]+', re.M)
-        list_output = self.regex.findall(self.get_input())
-        tam = len(list_output)
-        cad_output = "\n".join(list_output)
-        self.set_output(cad_output+"\nMatches: "+ tam)
+        cad = FilterWord().to_Filter(self.getInput())
+        self.setOutput(cad)
         
 
 if __name__=='__main__':
