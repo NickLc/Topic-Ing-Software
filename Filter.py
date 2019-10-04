@@ -10,6 +10,9 @@ class TopicApp:
         self.window.geometry('680x400')
         self.window.config(bg="#FFFFFF")
         
+        self.cad_input = " "
+        self.cad_output = " "
+        self.regex = re.compile(r' ', re.M)
 
         lbl_input = tk.Label(self.window, text='Texto')
         lbl_input.grid(column =0, row=2, sticky='W',padx=10)
@@ -43,14 +46,17 @@ class TopicApp:
 
     def filter_Space(self):
         """ Filter all space and tab from text input """
-        cad_output = re.sub(r"[\t ]+", " ", self.get_input())
+        self.regex = re.compile(r'[\t ]+', re.M)
+        cad_output = self.regex.sub(" ", self.get_input())
         self.set_output(cad_output)
     
     def filter_Word(self):
         """Filter all word from text input"""
-        cad_output = re.sub(r"[\w]+", " ", self.get_input())
-        print(cad_output)
-        self.set_output(cad_output)
+        self.regex = re.compile(r'[\w]+', re.M)
+        list_output = self.regex.findall(self.get_input())
+        tam = len(list_output)
+        cad_output = "\n".join(list_output)
+        self.set_output(cad_output+"\nMatches: "+ tam)
         
 
 if __name__=='__main__':
